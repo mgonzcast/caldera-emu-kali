@@ -10,16 +10,20 @@ Everything is installed on the kali user (password kali) as the default Kali Lin
 It should work on Virtualbox, but I haven´t tested it yet.
 
 The installation just needs to run:
-
+```
 packer build kali-linux.pkr.hcl
 vagrant up kali --provider=vmware_desktop
-
+```
 Some useful Vagrant commands:
 
 If you need to destroy the Vagrant VM and try again:
+```
 vagrant destroy -f
+```
 
 If you need to run just a certain script 
+```
 vagrant provision kali --provision-with provision-scripts
+```
 
 Of course, you can download the Kali VM and just run those scripts or use ansible or other automate tooling
