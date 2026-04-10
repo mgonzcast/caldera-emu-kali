@@ -1,5 +1,5 @@
 # caldera-emu-kali
-Automation of installation of Caldera and EMU plugin on Kali Linux with Packer and Vagrant
+Automation of Caldera installation and EMU plugin on Kali Linux with Packer and Vagrant
 
 This is part of my Master Thesis project for emulating Oilrig APT on Caldera
 
