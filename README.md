@@ -12,13 +12,17 @@ It should work on Virtualbox, but I haven´t tested it yet.
 The installation just needs to run:
 ```
 packer build kali-linux.pkr.hcl
+vagrant box add kali-linux kali-linux-virtualbox.box
+vagrant box add kali-linux kali-linux-vmware.box
+#Vmware
 vagrant up kali --provider=vmware_desktop
+#virtualbox
+vagrant up kali --provider=virtualbox
 ```
-Some useful Vagrant commands:
 
-If you need to destroy the Vagrant VM and try again:
+Unfortunately Vagrant doesn´t support to generate two machines with Vmware provider being one of them, so you need to remove one:
 ```
-vagrant destroy -f
+vagrant destroy kali -f
 ```
 
 If you need to run just a certain script 
