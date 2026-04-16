@@ -10,14 +10,11 @@ Vagrant.configure("2") do |config|
   # ============================================================================
   # Set the box to use - update the path to match your Packer output boxes
 
-  config.vm.box = "kali-linux-vmware.box"  # For VMware
-  # config.vm.box = "linux-virtualbox.box"  # For VirtualBox
-
+  config.vm.box = "kali-linux"  
+  
   config.vm.network "private_network",
-      ip: "192.168.0.4",
-      netmask: "255.255.255.0",
-      auto_config: true,
-      adapter: 1
+      virtualbox__intnet: "intnet-attack",
+      auto_config: false
 
   config.vm.define "kali" do |kl|
     kl.vm.hostname = "kali"
@@ -31,18 +28,7 @@ Vagrant.configure("2") do |config|
     kl.ssh.password = "kali"
     kl.ssh.insert_key = true
     kl.ssh.forward_agent = true
-  
-  # ============================================================================
-  # NETWORK CONFIGURATION
-  # ============================================================================
-  # Private network - reachable from host at static IP
-  # config.vm.network "private_network", ip: "192.168.0.4"
 
-
-
-  
-  # Optional: Port forwarding example
-  # config.vm.network "forwarded_port", guest: 22, host: 2222, host_ip: "127.0.0.1"
   
   # ============================================================================
   # SHARED FOLDERS
@@ -60,6 +46,7 @@ Vagrant.configure("2") do |config|
   # VIRTUALBOX PROVIDER CONFIGURATION
   # ============================================================================
   kl.vm.provider "virtualbox" do |vb|
+    
     vb.name = "kali-linux-vm"
     vb.gui = true                           # Boot with GUI window visible
     vb.cpus = 4
@@ -80,6 +67,7 @@ Vagrant.configure("2") do |config|
   # VMWARE PROVIDER CONFIGURATION
   # ============================================================================
   kl.vm.provider "vmware_desktop" do |v|
+    
     v.vmx["displayName"] = "kali-linux-vm"
     v.gui = true                            # Boot with GUI window visible
     v.cpus = 4
@@ -121,16 +109,6 @@ Vagrant.configure("2") do |config|
 
   SHELL
 
-  kl.vm.provision "reload"
-
-  kl.vm.provision "shell", inline: <<-SHELL
-
-   # Configure eth1 with static IP (if needed)
-   # This ensures the IP is applied even if Vagrant's auto_config has issues
-   ip addr add 192.168.0.4/24 dev eth1 2>/dev/null || true
-   #ip link set eth1 up
-  SHELL
-
   kl.vm.provision "provision-scripts", type: "shell", privileged: false, inline: <<-SHELL
 
   # Provioning scripts for managing Caldera server and Kali sandcat agent
@@ -165,7 +143,25 @@ EOF
 
   kl.vm.provision "provision-caldera-emu", type: "shell", path: "scripts/provision-caldera-emu.sh", privileged: false
 
-  
+  kl.vm.provision "provision-network", type: "shell", privileged: true, inline: <<-SHELL
+
+   # Configure eth1 with static IP (if needed)
+   # This ensures the IP is applied even if Vagrant's auto_config has issues
+   
+   echo "[+] Configuring network..."
+   echo "auto eth1" >> /etc/network/interfaces
+   echo "iface eth1 inet static" >> /etc/network/interfaces
+   echo " address 192.168.0.4" >> /etc/network/interfaces
+   echo " netmask 255.255.255.0" >> /etc/network/interfaces
+   echo " gateway 192.168.0.1" >> /etc/network/interfaces
+
+   systemctl restart networking
+   ifconfig eth1
+
+   
+  SHELL
+
+  kl.vm.provision "reload"
   
 end
 
