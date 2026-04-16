@@ -47,7 +47,7 @@ fi
 
 # As mentioned here https://github.com/mitre/emu/issues/44, you need to run this after running download_payloads.sh
 
-python3 ./plugins/emu/data/adversary-emulation-plans/sandworm/Resources/utilities/crypt_executables.py -i ./ -p malware --decrypt
+python3 $INSTALL_DIR/plugins/emu/data/adversary-emulation-plans/sandworm/Resources/utilities/crypt_executables.py -i ./ -p malware --decrypt
 
 echo "========================================================="
 echo "[+] EMU plugin configuration Finished!"
