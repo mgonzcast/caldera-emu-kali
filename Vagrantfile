@@ -161,6 +161,10 @@ EOF
    
   SHELL
 
+  # Only run this if you are running the oilrig APT
+  kl.vm.provision "update-oilrig-yaml", type: "shell", path: "scripts/update-oilrig-yaml.sh", privileged: false
+  
+
   kl.vm.provision "reload"
   
 end
