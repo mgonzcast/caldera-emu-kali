@@ -1,0 +1,1 @@
+Powershell -noprofile -executionpolicy unrestricted -File .\download_iso.ps1
